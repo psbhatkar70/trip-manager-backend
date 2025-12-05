@@ -111,12 +111,12 @@ exports.getTripStats = async (req,res)=>{
 
 exports.getTrips = async (req, res) => {
   try {
-    const carid = req.query.carid;  // <-- this is important
+    const carid = req.query.carid;  
 
     const filter = { OwnerId: req.user._id };
 
     if (carid) {
-      filter.car = carid;   // <-- add car filter only if user sent carid
+      filter.car = carid;   
     }
 
     const trips = await Trip.find(filter)

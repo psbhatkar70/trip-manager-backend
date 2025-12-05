@@ -4,8 +4,6 @@ const cors = require('cors');
 
 
 
-// IMPLEMENT CORS
-// Allow everyone (simplest for now)
 app.use(cors());
 app.use(express.json());
 const carRoutes=require('./routes/carRoutes');
