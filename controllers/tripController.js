@@ -1,10 +1,13 @@
 const Trip=require('../models/tripModel');
 const Car =require('../models/carModel');
+const dayjs = require('dayjs');
 
 exports.createTrip= async (req,res)=>{
     try {
        req.body.OwnerId=req.user._id;
        req.body.OwnerName=req.user.name;
+       req.body.date = dayjs(req.body.date).format("DD-MM-YYYY");
+    req.body.TripDate = dayjs(req.body.TripDate).format("DD-MM-YYYY");
         const data=req.body;
         const carId=data.car;
         const distance=data.distance;
@@ -128,4 +131,5 @@ exports.getTrips = async (req, res) => {
     res.status(500).json({ status: "fail", message: err.message });
   }
 };
+
 

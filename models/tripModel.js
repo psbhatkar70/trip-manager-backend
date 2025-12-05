@@ -6,6 +6,10 @@ const tripSchema=new mongoose.Schema({
         type:String,
         required:[true,'A trip must have a name']
     },
+    TripDate:{
+        type:String,
+        default:Date.now()
+    },
     OwnerName:{
         type:String,
         required:true
@@ -21,7 +25,7 @@ const tripSchema=new mongoose.Schema({
     name: String,
     number: String,
     date:{
-        type:Date,
+        type:String,
         default:Date.now()
     },
     distance:{
