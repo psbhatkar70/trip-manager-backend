@@ -12,6 +12,9 @@ const carRoutes=require('./routes/carRoutes');
 const tripRoutes=require('./routes/tripRoutes');
 const userRoutes=require('./routes/userRoutes');
 
+app.get('/ping', (req, res) => {
+  res.status(200).send('Pong');
+});
 
 app.use((req, res, next) => {
   req.user = { _id: '654abc123456789012345678' }; 
