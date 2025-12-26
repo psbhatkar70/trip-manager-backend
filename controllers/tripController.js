@@ -1,13 +1,15 @@
 const Trip=require('../models/tripModel');
 const Car =require('../models/carModel');
 const dayjs = require('dayjs');
+const mongoose=require('mongoose');
 
 exports.createTrip= async (req,res)=>{
     try {
-       req.body.OwnerId=req.user._id;
-       req.body.OwnerName=req.user.name;
-       req.body.date = dayjs(req.body.date).format("DD-MM-YYYY");
-    req.body.TripDate = dayjs(req.body.TripDate).format("DD-MM-YYYY");
+    req.body.OwnerId=req.user._id;
+    req.body.OwnerName=req.user.name;
+    // req.body.date = Date.now();
+    req.body.TripDate = new Date(req.body.TripDate);
+    req.body.TripDateEnd=new Date(req.body.TripDateEnd);
         const data=req.body;
         const carId=data.car;
         const distance=data.distance;
@@ -27,13 +29,22 @@ exports.createTrip= async (req,res)=>{
             message:"You do not own this car you can not create trip for this car!"
         })
       }
+    const targetCarId = new mongoose.Types.ObjectId(carId);
+    const existingtrip = await Trip.findOne({carId : targetCarId, TripDateEnd : {$gte : req.body.TripDate} , TripDate :{$lte : req.body.TripDateEnd}});
+        if (existingtrip) {
+            return res.status(409).json({ 
+                status: "Fail",
+                message: `Car already booked for dates from ${dayjs(existingtrip.TripDate).format("DD-MM-YYYY")} to ${dayjs(existingtrip.TripDateEnd).format("DD-MM-YYYY")}`,
+        });
+    }
         const tripcost=(distance * car.pricePerKm) + car.driverCost;
         const update = await Car.findByIdAndUpdate(carId,{ $inc: { distanceTravelled: distance ,totalEarning: tripcost} })
 
          const carinfo={
             name:car.name,
             number:car.carNumber,
-            cost:tripcost
+            cost:tripcost,
+            carId:carId
         }
         
         const newTrip=await Trip.create({...req.body, ...carinfo});
@@ -57,7 +68,7 @@ exports.getAllTrips = async (req,res)=>{
     try {
 
         
-        const trips= await Trip.find({ OwnerId: req.user._id }).populate('car', 'name carNumber');
+        const trips= await Trip.find({ OwnerId: req.user._id });
 
         res.status(200).json({
             status:"Success",
