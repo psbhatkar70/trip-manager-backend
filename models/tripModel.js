@@ -22,7 +22,10 @@ const tripSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-   
+    completed:{
+        type:Boolean,
+        default:false
+    },
     carId:{type: mongoose.Schema.Types.ObjectId},
     name: String,
     number: String,
