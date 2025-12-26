@@ -127,7 +127,7 @@ exports.getTrips = async (req, res) => {
     const filter = { OwnerId: req.user._id };
 
     if (carid) {
-      filter.car = carid;   
+      filter.carId = carid;   
     }
 
     const trips = await Trip.find(filter);
