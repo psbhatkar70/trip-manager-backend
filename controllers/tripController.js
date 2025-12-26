@@ -130,8 +130,7 @@ exports.getTrips = async (req, res) => {
       filter.car = carid;   
     }
 
-    const trips = await Trip.find(filter)
-      .populate("car", "name carNumber");
+    const trips = await Trip.find(filter);
 
     res.status(200).json({
       status: "Success",
